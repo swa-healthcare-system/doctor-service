@@ -26,7 +26,7 @@ jobs:
 
       - name: Start Docker Compose Services
         run: |
-          docker-compose up -d
+          docker compose up -d
           sleep 10 # Ensure services are ready
 
       - name: Run Tests
@@ -34,4 +34,4 @@ jobs:
 
       - name: Stop Docker Compose Services
         if: always()
-        run: docker-compose down
+        run: docker compose down
