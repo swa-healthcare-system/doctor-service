@@ -1,6 +1,9 @@
 package com.example.doctor_service.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,16 +11,20 @@ import java.util.List;
 
 @Entity
 @Table(name="Doctor")
+@Data
 public class Doctor {
-    @Column(nullable = false)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     @Column
     private String name;
+
     @Column
     private String surname;
+
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Appointment> appointments = new ArrayList<>();
 
     public Doctor(int id, String name, String surname) {
