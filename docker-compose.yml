@@ -28,7 +28,12 @@ services:
       - "8080:8080"
     networks:
       - app_network
+      - shared-net
 
 networks:
   app_network:
     driver: bridge
+
+  shared-net:
+    external: true
+    name: kafka-network
