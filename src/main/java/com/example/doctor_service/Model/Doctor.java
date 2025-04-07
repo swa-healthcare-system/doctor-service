@@ -23,14 +23,22 @@ public class Doctor {
     @Column
     private String surname;
 
+    @Column
+    private String email;
+
+    @Column
+    private String telephoneNumber;
+
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Appointment> appointments = new ArrayList<>();
 
-    public Doctor(int id, String name, String surname) {
+    public Doctor(int id, String name, String surname, String email, String telephoneNumber) {
         this.id = id;
         this.name = name;
         this.surname= surname;
+        this.email = email;
+        this.telephoneNumber = telephoneNumber;
     }
 
     public Doctor() {}
@@ -42,6 +50,8 @@ public class Doctor {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", appointments=" + appointments +
+                ", email=" + email +
+                ", telephoneNumber=" + telephoneNumber +
                 '}';
     }
 
@@ -76,4 +86,21 @@ public class Doctor {
     public void setAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
 }

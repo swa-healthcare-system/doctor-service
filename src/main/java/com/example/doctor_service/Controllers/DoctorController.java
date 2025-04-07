@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.web.ErrorResponse;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -38,6 +39,7 @@ import java.util.stream.StreamSupport;
     AppointmentService appointmentService;
     public record DoctorDateFilter(int month, int year) {}
     public record DoctorDtoResponse(Integer id, String name, String surname ,List<Appointment>appointments) {}
+
 
     @Autowired
     public DoctorController(DoctorService doctorService, AppointmentService appointmentService){
