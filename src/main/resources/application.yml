@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: doctor-service
+  config:
+    # change host to match yours.
+    # Use host.docker.internal as host if configuration-server runs locally and service inside docker
+    import: configserver:http://config-server:8888
+
+# default props, will be overridden by props from configuration-server
+  datasource:
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/lib}
+  jpa:
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    topics:
+      doctor: doctor-topic
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: doctor-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.example.doctor_service*
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+server:
+  port: '8080'
+logging:
+  level:
+    # allows to check if config props were loaded from config server
+    org.springframework.cloud.config: DEBUG
+
+
