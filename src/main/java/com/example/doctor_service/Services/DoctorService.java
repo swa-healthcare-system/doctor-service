@@ -1,31 +1,40 @@
 package com.example.doctor_service.Services;
 
+import com.example.doctor_service.Kafka.Events.*;
 import com.example.doctor_service.Model.Appointment;
 import com.example.doctor_service.Model.Doctor;
 import com.example.doctor_service.Repositories.DoctorRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class DoctorService {
+    final Logger logger = LoggerFactory.getLogger(DoctorService.class);
+
     private DoctorRepository doctorRepository;
     private AppointmentService appointmentService;
 
-    @PersistenceContext
-    private EntityManager entityManager; // Inject EntityManager
+    @Value("${spring.kafka.topics.doctor}")
+    private String doctorTopic;
+
+    private final KafkaTemplate<String, KafkaEventWrapper> kafkaTemplate;
 
     @Autowired
-    public DoctorService(DoctorRepository doctorRepository, AppointmentService appointmentService) {
+    public DoctorService(DoctorRepository doctorRepository,
+                         AppointmentService appointmentService,
+                         KafkaTemplate<String, KafkaEventWrapper> kafkaTemplate) {
         this.doctorRepository = doctorRepository;
         this.appointmentService = appointmentService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public Optional<Doctor> findById(int id) {
@@ -33,11 +42,16 @@ public class DoctorService {
     }
 
     public Doctor addDoctor(Doctor doctor) {
-        return doctorRepository.save(doctor);
+        logger.info("Sending message to kafka {}", doctor.getName());
+        Doctor createdDoctor = doctorRepository.save(doctor);
+        kafkaTemplate.send(doctorTopic, new KafkaEventWrapper("DOCTOR_CREATED",
+                doctor));
+        return createdDoctor;
     }
 
     public void deleteDoctorById(int id) {
         doctorRepository.deleteById(id);
+        kafkaTemplate.send(doctorTopic, new KafkaEventWrapper("DOCTOR_DELETED", id));
     }
 
     /* by doctor/admin */
@@ -54,6 +68,7 @@ public class DoctorService {
             doctorRepository.save(doc);
             appointmentService.addAppointment(newAppointment);
 
+            kafkaTemplate.send(doctorTopic, new KafkaEventWrapper("APPOINTMENT_CREATED", newAppointment));
             return newAppointment;
         } else throw new EntityNotFoundException("Doctor not found, so impossible to add new appointment");
     }
@@ -78,8 +93,12 @@ public class DoctorService {
         // Delete the appointment
         appointmentService.deleteAppointmentById(appointmentToDelete.getId());
 
-        // Optional: save the doctor to ensure the collection is updated
         doctorRepository.save(doctor);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("appointmentId", String.valueOf(appointmentId));
+        response.put("doctorId", String.valueOf(doctorId));
+        kafkaTemplate.send(doctorTopic, new KafkaEventWrapper("APPOINTMENT_CANCELED", response));
     }
 
     public Iterable<Doctor> getDoctors() {
