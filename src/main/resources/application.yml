@@ -38,6 +38,20 @@ eureka:
   client:
     service-url:
       defaultZone: ${SPRING_EUREKA_URL:http://eureka-server:8761/eureka}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /actuator
+  endpoint:
+    prometheus:
+      enabled: 'true'
+  metrics:
+    export:
+      prometheus:
+        enabled: 'true'
+
 logging:
   level:
     # allows to check if config props were loaded from config server
