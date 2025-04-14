@@ -24,6 +24,11 @@ jobs:
       - name: Build Spring Boot App
         run: mvn clean package -DskipTests
 
+      - name: Create required Docker networks
+        run: |
+          docker network create prometheus-network || true
+          docker network create kafka-network || true
+
       - name: Start Docker Compose Services
         run: |
           docker compose up -d
