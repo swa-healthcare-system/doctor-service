@@ -59,14 +59,17 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
-      - "8092:8080"
+      - "8092:8092"
     labels:
-      - "prometheus.port=8080"
+      - "prometheus.port=8092"
       - "prometheus.path=/actuator/prometheus"
     networks:
       - internal-net
       - kafka-network
       - prometheus-network
+      - fluentd-net
+    volumes:
+      - ./../logs:/var/log/app
 
 networks:
   internal-net:
@@ -77,3 +80,6 @@ networks:
   prometheus-network:
     external: true
     name: prometheus-network
+  fluentd-net:
+    external: true
+    name: fluentd-network

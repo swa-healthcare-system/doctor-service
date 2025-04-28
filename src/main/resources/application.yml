@@ -33,7 +33,7 @@ spring:
               packages: com.example.doctor_service*
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
 server:
-  port: '8080'
+  port: '8092'
 eureka:
   client:
     service-url:
