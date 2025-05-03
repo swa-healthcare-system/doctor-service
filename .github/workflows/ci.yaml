@@ -62,9 +62,9 @@ jobs:
           context: .
           push: true
           tags: |
-            839/swa_doctor_service:latest
-            839/swa_doctor_service:${{ github.sha }}
-          cache-from: type=registry,ref=839/swa_doctor_service:latest
+            andrei839/swa_doctor_service:latest
+            andrei839/swa_doctor_service:${{ github.sha }}
+          cache-from: type=registry,ref=andrei839/swa_doctor_service:latest
           cache-to: type=inline
 
       - name: Stop Docker Compose Services
