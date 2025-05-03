@@ -1,12 +1,12 @@
 spring:
   application:
-    name: doctor-service
+    name: doctor-service-spring-boot
   config:
     # change host to match yours.
     # Use host.docker.internal as host if configuration-server runs locally and service inside docker
     import: optional:configserver:http://config-server:8888
 
-# default props, will be overridden by props from configuration-server
+## default props, will be overridden by props from configuration-server
   datasource:
     password: ${SPRING_DATASOURCE_PASSWORD:password}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
