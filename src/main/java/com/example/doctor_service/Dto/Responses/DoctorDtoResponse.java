@@ -1,12 +1,14 @@
 package com.example.doctor_service.Dto.Responses;
 
 import com.example.doctor_service.Model.Appointment;
+import com.example.doctor_service.Model.Doctor;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +21,23 @@ public class DoctorDtoResponse {
 
     private String surname;
 
-    private List<Appointment> appointments;
+    private List<LocalDate> availabilityDates;
 
-//    public List<Appointment> getAppointments() {
-//        return appointments.stream().map(appointment -> { });
+    public List<LocalDate> getAvailabilityDates() {
+        return availabilityDates;
+    }
+
+    public void setAvailabilityDates(List<LocalDate> availabilityDates) {
+        this.availabilityDates = availabilityDates;
+    }
+
+    public DoctorDtoResponse(Doctor doctor) {
+        this.id = doctor.getId();
+        this.name = doctor.getName();
+        this.surname = doctor.getSurname();
+    }
+    //    public List<Appointment> getAppointments() {
+//        return doctorAvailabilities.stream().map(appointment -> { });
 //    }
 //
 //    public Appointment getAppointmentWithoutCircularReference(Appointment appointment) {
