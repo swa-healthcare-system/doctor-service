@@ -2,11 +2,9 @@ package com.example.doctor_service.Model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,9 +27,9 @@ public class Doctor {
     @Column
     private String telephoneNumber;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Appointment> appointments = new ArrayList<>();
+//    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+//    @JsonManagedReference
+//    private List<DoctorAvailability> availableDates = new ArrayList<>();
 
     public Doctor(int id, String name, String surname, String email, String telephoneNumber) {
         this.id = id;
@@ -49,7 +47,7 @@ public class Doctor {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", appointments=" + appointments +
+//                ", availableDates=" + availableDates +
                 ", email=" + email +
                 ", telephoneNumber=" + telephoneNumber +
                 '}';
@@ -79,13 +77,13 @@ public class Doctor {
         this.surname = surname;
     }
 
-    public List<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(List<Appointment> appointments) {
-        this.appointments = appointments;
-    }
+//    public List<DoctorAvailability> getAvailableDates() {
+//        return availableDates;
+//    }
+//
+//    public void setAvailableDates(List<DoctorAvailability> dates) {
+//        this.availableDates = dates;
+//    }
 
     public String getEmail() {
         return email;
