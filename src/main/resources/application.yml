@@ -46,11 +46,11 @@ management:
       base-path: /actuator
   endpoint:
     prometheus:
-      enabled: 'true'
+      enabled: true
   metrics:
     export:
       prometheus:
-        enabled: 'true'
+        enabled: true
 
 logging:
   level:
