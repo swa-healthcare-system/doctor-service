@@ -28,7 +28,7 @@ jobs:
         run: |
           docker network create prometheus-network || true
           docker network create kafka-network || true
-          docker network create fluentd-network || true
+          docker network create logging-network || true
 
       - name: Start Docker Compose Services
         run: |
