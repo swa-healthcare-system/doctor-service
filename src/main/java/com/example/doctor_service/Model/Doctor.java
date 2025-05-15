@@ -27,9 +27,9 @@ public class Doctor {
     @Column
     private String telephoneNumber;
 
-//    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-//    @JsonManagedReference
-//    private List<DoctorAvailability> availableDates = new ArrayList<>();
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<DoctorAvailability> availableDates = new ArrayList<>();
 
     public Doctor(int id, String name, String surname, String email, String telephoneNumber) {
         this.id = id;
@@ -47,10 +47,18 @@ public class Doctor {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-//                ", availableDates=" + availableDates +
+                ", availableDates=" + availableDates +
                 ", email=" + email +
                 ", telephoneNumber=" + telephoneNumber +
                 '}';
+    }
+
+    public List<DoctorAvailability> getAvailableDates() {
+        return availableDates;
+    }
+
+    public void setAvailableDates(List<DoctorAvailability> availableDates) {
+        this.availableDates = availableDates;
     }
 
     public Integer getId() {
@@ -100,5 +108,7 @@ public class Doctor {
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
     }
+
+
 
 }

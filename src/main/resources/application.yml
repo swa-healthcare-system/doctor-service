@@ -1,6 +1,6 @@
 spring:
   application:
-    name: doctor-service-spring-boot
+    name: doctor-service
   config:
     # change host to match yours.
     # Use host.docker.internal as host if configuration-server runs locally and service inside docker
