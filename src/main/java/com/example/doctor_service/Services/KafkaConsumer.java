@@ -29,5 +29,4 @@ public class KafkaConsumer {
         logger.info("Received message: {} {}", eventType, payload);
     }
 
-
 }
