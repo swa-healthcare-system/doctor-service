@@ -31,6 +31,12 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8092:8092"
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: "127.0.0.1:24228"
+        fluentd-async: "true"
+        tag: doctor-service
     labels:
       - "prometheus.port=8092"
       - "prometheus.path=/actuator/prometheus"
@@ -38,9 +44,22 @@ services:
       - internal-net
       - kafka-network
       - prometheus-network
-      - fluentd-net
+      - logging-net
     volumes:
       - ./../logs:/var/log/app
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  fluentd-doctor:
+    build:
+      context: .
+      dockerfile: ./fluentd/Dockerfile
+    container_name: fluentd-doctor
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+    ports:
+      - "24228:24228"
+    networks:
+      - logging-net
 
 networks:
   internal-net:
@@ -51,6 +70,6 @@ networks:
   prometheus-network:
     external: true
     name: prometheus-network
-  fluentd-net:
+  logging-net:
     external: true
-    name: fluentd-network
+    name: logging-network
