@@ -50,8 +50,9 @@ public class DoctorService {
     }
 
     public void deleteDoctorById(int id) {
+        Optional<Doctor> doctor = doctorRepository.findById(id);
         doctorRepository.deleteById(id);
-        kafkaTemplate.send(doctorTopic, new KafkaEventWrapper("DOCTOR_DELETED", id));
+        kafkaTemplate.send(doctorTopic, new KafkaEventWrapper("DOCTOR_DELETED", doctor));
     }
 
 //    /* by doctor/admin */
