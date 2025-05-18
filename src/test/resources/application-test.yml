@@ -1,0 +1,30 @@
+#spring:
+#  datasource:
+#    url: jdbc:tc:postgresql:14:///doctor_service_test
+#    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+spring:
+  cloud:
+    config:
+      enabled: false
+  kafka:
+    bootstrap-servers: localhost:9099  # or any dummy value
+    listener:
+      auto-startup: false
+    consumer:
+      group-id: test-group
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+eureka:
+  client:
+    enabled: false
+  instance:
+    enabled: false
+

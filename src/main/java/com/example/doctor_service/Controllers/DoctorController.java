@@ -36,7 +36,7 @@ public class DoctorController {
     DoctorService doctorService;
     DoctorAvailabilityService doctorAvailabilityService;
     public record DoctorDateFilter(int month, int year) {}
-    public record DoctorDtoResponse(Integer id, String name, String surname ,List<LocalDate> doctorAvailabilities) {}
+    public record DoctorDtoResponse(Integer id, String name, String surname, String email, String telephoneNumber, List<LocalDate> doctorAvailabilities) {}
 
 
     @Autowired
@@ -64,6 +64,8 @@ public class DoctorController {
                         doctor.getId(),
                         doctor.getName(),
                         doctor.getSurname(),
+                        doctor.getEmail(),
+                        doctor.getTelephoneNumber(),
                         doctorAvailabilityService.getFilteredDoctorAvailability(id, firstDayOfMonth, endOfMonth));
 
                 return ResponseEntity.ok(doctorDtoResponse);
@@ -86,6 +88,8 @@ public class DoctorController {
                     doctor.getId(),
                     doctor.getName(),
                     doctor.getSurname(),
+                            doctor.getEmail(),
+                    doctor.getTelephoneNumber(),
                     doctorAvailabilityService.getWholeDoctorAvailability(doctor.getId())))
                     .collect(Collectors.toList())
             );
@@ -105,6 +109,8 @@ public class DoctorController {
                     createdDoctor.getId(),
                     createdDoctor.getName(),
                     createdDoctor.getSurname(),
+                    createdDoctor.getEmail(),
+                    createdDoctor.getTelephoneNumber(),
                     new ArrayList<>()));
         } catch (Exception e){
             logger.error("Failed to add doctor. Message: {}", e.getMessage());
@@ -114,8 +120,14 @@ public class DoctorController {
 
     @Operation(description = "Delete doctor by id including all doctor's doctorAvailabilities.")
     @DeleteMapping("/{id}")
-    public void deleteDoctorById(@PathVariable("id") int id){
-        doctorService.deleteDoctorById(id);
+    public ResponseEntity<Void> deleteDoctorById(@PathVariable("id") int id) {
+        try {
+            doctorService.deleteDoctorById(id);
+            return ResponseEntity.noContent().build(); // 204 No Content on success
+        } catch (EntityNotFoundException entityNotFoundException) {
+            logger.error("Failed to delete doctor. Message: {}", entityNotFoundException.getMessage());
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
     }
 
 }
